@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GitGrade - Repository Evaluator</title>
+    <title>GitGrade - AI Repository Evaluator</title>
     <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
     <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
@@ -16,13 +16,13 @@
         
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
-            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #1a1a2e 100%);
+            background: linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%);
             min-height: 100vh;
             color: #fff;
         }
         
         .container {
-            max-width: 1024px;
+            max-width: 1200px;
             margin: 0 auto;
             padding: 24px;
         }
@@ -30,6 +30,12 @@
         .header {
             text-align: center;
             margin-bottom: 40px;
+            animation: fadeIn 0.6s ease-in;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
         
         .header-icon {
@@ -41,36 +47,81 @@
         }
         
         .title {
-            font-size: 2.5rem;
+            font-size: 3rem;
             font-weight: bold;
-            color: #fff;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
         
         .subtitle {
-            font-size: 1.125rem;
+            font-size: 1.25rem;
             color: #d1d5db;
             margin-top: 8px;
         }
         
         .description {
-            font-size: 0.875rem;
+            font-size: 0.95rem;
             color: #9ca3af;
             margin-top: 8px;
         }
         
+        .stats-bar {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+        
+        .stat-card {
+            background: rgba(31, 41, 55, 0.6);
+            border: 1px solid rgba(139, 92, 246, 0.3);
+            border-radius: 12px;
+            padding: 16px;
+            text-align: center;
+            transition: all 0.3s;
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-2px);
+            border-color: rgba(139, 92, 246, 0.6);
+        }
+        
+        .stat-number {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #8b5cf6;
+        }
+        
+        .stat-label {
+            font-size: 0.875rem;
+            color: #9ca3af;
+            margin-top: 4px;
+        }
+        
         .input-card {
             background: rgba(31, 41, 55, 0.8);
-            border-radius: 12px;
-            padding: 24px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(139, 92, 246, 0.3);
+            border-radius: 16px;
+            padding: 28px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
             margin-bottom: 24px;
+            animation: slideUp 0.5s ease-out;
+        }
+        
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
         }
         
         .label {
             display: block;
             color: #d1d5db;
-            margin-bottom: 8px;
-            font-weight: 500;
+            margin-bottom: 12px;
+            font-weight: 600;
+            font-size: 1.05rem;
         }
         
         .input-group {
@@ -80,11 +131,11 @@
         
         .input {
             flex: 1;
-            padding: 12px 16px;
-            background: #374151;
+            padding: 14px 18px;
+            background: rgba(55, 65, 81, 0.8);
             color: #fff;
             border: 2px solid transparent;
-            border-radius: 8px;
+            border-radius: 10px;
             font-size: 1rem;
             outline: none;
             transition: all 0.3s;
@@ -92,15 +143,16 @@
         
         .input:focus {
             border-color: #8b5cf6;
-            box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.1);
+            box-shadow: 0 0 0 4px rgba(139, 92, 246, 0.15);
+            background: rgba(55, 65, 81, 1);
         }
         
         .btn {
-            padding: 12px 24px;
-            background: #8b5cf6;
+            padding: 14px 32px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: #fff;
             border: none;
-            border-radius: 8px;
+            border-radius: 10px;
             font-weight: 600;
             font-size: 1rem;
             cursor: pointer;
@@ -108,44 +160,78 @@
             align-items: center;
             gap: 8px;
             transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
         }
         
         .btn:hover:not(:disabled) {
-            background: #7c3aed;
-            transform: translateY(-1px);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
         }
         
         .btn:disabled {
             background: #4b5563;
             cursor: not-allowed;
             opacity: 0.6;
+            box-shadow: none;
         }
         
         .error-card {
-            background: rgba(153, 27, 27, 0.5);
+            background: rgba(153, 27, 27, 0.6);
             border: 2px solid #dc2626;
             border-radius: 12px;
-            padding: 16px;
+            padding: 20px;
             margin-bottom: 24px;
+            animation: shake 0.5s;
+        }
+        
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            75% { transform: translateX(10px); }
         }
         
         .error-title {
             color: #fecaca;
             font-weight: 600;
-            margin-bottom: 4px;
+            margin-bottom: 8px;
+            font-size: 1.1rem;
         }
         
         .error-text {
             color: #fca5a5;
-            font-size: 0.875rem;
+            font-size: 0.95rem;
         }
         
         .score-card {
-            background: linear-gradient(135deg, #7c3aed 0%, #6d28d9 100%);
-            border-radius: 12px;
-            padding: 24px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 16px;
+            padding: 32px;
+            box-shadow: 0 20px 60px rgba(102, 126, 234, 0.4);
             margin-bottom: 24px;
+            animation: scaleIn 0.5s ease-out;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .score-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            animation: pulse 4s ease-in-out infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 0.5; }
+            50% { transform: scale(1.1); opacity: 0.8; }
+        }
+        
+        @keyframes scaleIn {
+            from { opacity: 0; transform: scale(0.9); }
+            to { opacity: 1; transform: scale(1); }
         }
         
         .score-header {
@@ -153,70 +239,154 @@
             justify-content: space-between;
             align-items: center;
             margin-bottom: 24px;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .repo-info {
+            flex: 1;
         }
         
         .repo-name {
-            font-size: 1.5rem;
+            font-size: 1.75rem;
             font-weight: bold;
-            margin-bottom: 4px;
+            margin-bottom: 8px;
         }
         
-        .repo-lang {
+        .repo-meta {
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+            margin-top: 8px;
+        }
+        
+        .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
             color: #e9d5ff;
+            font-size: 0.9rem;
         }
         
         .score-display {
             display: flex;
             align-items: flex-end;
-            gap: 16px;
+            gap: 24px;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .score-main {
+            text-align: center;
         }
         
         .score-number {
-            font-size: 4rem;
+            font-size: 5rem;
             font-weight: bold;
             line-height: 1;
+            text-shadow: 0 4px 20px rgba(0,0,0,0.3);
         }
         
         .score-label {
             color: #e9d5ff;
-            font-size: 0.875rem;
+            font-size: 0.95rem;
+            margin-top: 4px;
+        }
+        
+        .rating-display {
+            text-align: center;
         }
         
         .rating-badge {
-            font-size: 1.5rem;
+            font-size: 1.75rem;
             font-weight: bold;
             margin-bottom: 8px;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.3);
         }
         
         .rating-level {
             color: #e9d5ff;
+            font-size: 1.1rem;
         }
         
         .card {
             background: rgba(31, 41, 55, 0.8);
-            border-radius: 12px;
-            padding: 24px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(139, 92, 246, 0.2);
+            border-radius: 16px;
+            padding: 28px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
             margin-bottom: 24px;
+            animation: slideUp 0.5s ease-out;
         }
         
         .card-title {
-            font-size: 1.25rem;
+            font-size: 1.5rem;
             font-weight: bold;
-            margin-bottom: 16px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #fff;
         }
         
         .summary-text {
-            font-size: 1.125rem;
+            font-size: 1.15rem;
             color: #d1d5db;
-            line-height: 1.6;
+            line-height: 1.7;
+            padding: 16px;
+            background: rgba(55, 65, 81, 0.5);
+            border-radius: 10px;
+            border-left: 4px solid #8b5cf6;
+        }
+        
+        .insights-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-top: 16px;
+        }
+        
+        .insight-card {
+            background: rgba(55, 65, 81, 0.6);
+            border-radius: 10px;
+            padding: 16px;
+            text-align: center;
+            border: 1px solid rgba(139, 92, 246, 0.2);
+            transition: all 0.3s;
+        }
+        
+        .insight-card:hover {
+            transform: translateY(-4px);
+            border-color: rgba(139, 92, 246, 0.5);
+        }
+        
+        .insight-value {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #8b5cf6;
+            margin-bottom: 4px;
+        }
+        
+        .insight-label {
+            font-size: 0.875rem;
+            color: #9ca3af;
         }
         
         .breakdown-item {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            margin-bottom: 16px;
+            margin-bottom: 20px;
+            padding: 16px;
+            background: rgba(55, 65, 81, 0.4);
+            border-radius: 10px;
+            transition: all 0.3s;
+        }
+        
+        .breakdown-item:hover {
+            background: rgba(55, 65, 81, 0.6);
+            transform: translateX(4px);
         }
         
         .breakdown-info {
@@ -226,61 +396,85 @@
         .breakdown-header {
             display: flex;
             align-items: center;
-            gap: 8px;
-            margin-bottom: 4px;
+            gap: 10px;
+            margin-bottom: 6px;
         }
         
         .breakdown-name {
             color: #d1d5db;
-            font-weight: 500;
+            font-weight: 600;
             text-transform: capitalize;
+            font-size: 1.05rem;
         }
         
         .breakdown-score {
             color: #a78bfa;
             font-weight: bold;
+            font-size: 1.1rem;
         }
         
         .breakdown-reason {
             color: #9ca3af;
-            font-size: 0.875rem;
+            font-size: 0.9rem;
         }
         
         .progress-bar-container {
-            width: 96px;
-            height: 8px;
-            background: #374151;
+            width: 120px;
+            height: 10px;
+            background: rgba(55, 65, 81, 0.8);
             border-radius: 999px;
             overflow: hidden;
             margin-left: 16px;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.2);
         }
         
         .progress-bar {
             height: 100%;
-            background: #8b5cf6;
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
             border-radius: 999px;
-            transition: width 0.5s ease;
+            transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 0 10px rgba(102, 126, 234, 0.6);
         }
         
         .roadmap-item {
-            background: #374151;
-            border-radius: 8px;
-            padding: 16px;
+            background: rgba(55, 65, 81, 0.6);
+            border-radius: 12px;
+            padding: 20px;
             margin-bottom: 16px;
+            border-left: 4px solid transparent;
+            transition: all 0.3s;
+        }
+        
+        .roadmap-item:hover {
+            background: rgba(55, 65, 81, 0.8);
+            transform: translateX(4px);
+        }
+        
+        .roadmap-item.priority-high {
+            border-left-color: #dc2626;
+        }
+        
+        .roadmap-item.priority-medium {
+            border-left-color: #eab308;
+        }
+        
+        .roadmap-item.priority-low {
+            border-left-color: #16a34a;
         }
         
         .roadmap-content {
             display: flex;
             align-items: flex-start;
-            gap: 12px;
+            gap: 16px;
         }
         
         .priority-badge {
-            padding: 4px 12px;
+            padding: 6px 14px;
             border-radius: 999px;
-            font-size: 0.75rem;
+            font-size: 0.8rem;
             font-weight: bold;
             white-space: nowrap;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
         }
         
         .priority-high {
@@ -298,15 +492,21 @@
             color: #fff;
         }
         
+        .roadmap-text {
+            flex: 1;
+        }
+        
         .roadmap-task {
             color: #fff;
             font-weight: bold;
-            margin-bottom: 4px;
+            margin-bottom: 6px;
+            font-size: 1.05rem;
         }
         
         .roadmap-details {
             color: #d1d5db;
-            font-size: 0.875rem;
+            font-size: 0.9rem;
+            line-height: 1.5;
         }
         
         .spinner {
@@ -321,6 +521,48 @@
         .gold { color: #fbbf24; }
         .silver { color: #d1d5db; }
         .bronze { color: #fb923c; }
+        
+        .badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+        
+        .badge-success {
+            background: rgba(16, 185, 129, 0.2);
+            color: #10b981;
+            border: 1px solid #10b981;
+        }
+        
+        .badge-warning {
+            background: rgba(245, 158, 11, 0.2);
+            color: #f59e0b;
+            border: 1px solid #f59e0b;
+        }
+        
+        .comparison-note {
+            background: rgba(139, 92, 246, 0.1);
+            border: 1px solid rgba(139, 92, 246, 0.3);
+            border-radius: 10px;
+            padding: 16px;
+            margin-top: 16px;
+            color: #d1d5db;
+            font-size: 0.9rem;
+        }
+        
+        .loading-overlay {
+            text-align: center;
+            padding: 40px;
+        }
+        
+        .loading-text {
+            color: #9ca3af;
+            margin-top: 16px;
+            font-size: 1.1rem;
+        }
     </style>
 </head>
 <body>
@@ -348,6 +590,22 @@
             </svg>
         );
 
+        const StarIcon = () => (
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+            </svg>
+        );
+
+        const ForkIcon = () => (
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <circle cx="12" cy="18" r="3"></circle>
+                <circle cx="6" cy="6" r="3"></circle>
+                <circle cx="18" cy="6" r="3"></circle>
+                <path d="M18 9v1a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2V9"></path>
+                <path d="M12 12v3"></path>
+            </svg>
+        );
+
         const GitGradeEvaluator = () => {
             const [repoUrl, setRepoUrl] = useState('');
             const [loading, setLoading] = useState(false);
@@ -372,405 +630,160 @@
                 };
 
                 let breakdown = {};
+                let insights = {
+                    totalFiles: repoData.tree?.length || 0,
+                    totalCommits: repoData.commits?.length || 0,
+                    contributors: repoData.contributors || 1,
+                    lastUpdate: repoData.lastUpdate || 'N/A'
+                };
 
+                // Enhanced README Analysis
                 if (repoData.readme) {
                     const readmeLength = repoData.readme.length;
-                    if (readmeLength > 500) {
+                    const hasInstallation = /install|setup|getting started/i.test(repoData.readme);
+                    const hasExamples = /example|usage|demo/i.test(repoData.readme);
+                    const hasBadges = /badge|shield/i.test(repoData.readme);
+                    
+                    if (readmeLength > 1000 && hasInstallation && hasExamples) {
                         scores.readme = 15;
-                        breakdown.readme = { score: 15, reason: "Comprehensive README present" };
+                        breakdown.readme = { score: 15, reason: "Comprehensive README with examples and setup" };
+                    } else if (readmeLength > 500) {
+                        scores.readme = 12;
+                        breakdown.readme = { score: 12, reason: "Good README with decent detail" };
                     } else if (readmeLength > 200) {
-                        scores.readme = 10;
-                        breakdown.readme = { score: 10, reason: "Basic README present" };
+                        scores.readme = 8;
+                        breakdown.readme = { score: 8, reason: "Basic README present" };
                     } else {
-                        scores.readme = 5;
-                        breakdown.readme = { score: 5, reason: "Minimal README" };
+                        scores.readme = 4;
+                        breakdown.readme = { score: 4, reason: "Minimal README" };
                     }
                 } else {
-                    breakdown.readme = { score: 0, reason: "No README found" };
+                    breakdown.readme = { score: 0, reason: "No README found - Critical!" };
                 }
 
+                // Enhanced Structure Analysis
                 const fileCount = repoData.tree?.length || 0;
-                const hasSrcFolder = repoData.tree?.some(f => f.path.startsWith('src/'));
-                const hasTestFolder = repoData.tree?.some(f => f.path.includes('test') || f.path.includes('spec'));
+                const hasSrcFolder = repoData.tree?.some(f => f.path.startsWith('src/') || f.path.startsWith('lib/'));
+                const hasDocsFolder = repoData.tree?.some(f => f.path.startsWith('docs/'));
+                const hasTestFolder = repoData.tree?.some(f => f.path.includes('test') || f.path.includes('spec') || f.path.includes('__tests__'));
                 const hasConfigFiles = repoData.tree?.some(f => 
                     f.path.includes('package.json') || 
                     f.path.includes('requirements.txt') ||
                     f.path.includes('pom.xml') ||
-                    f.path.includes('Cargo.toml')
+                    f.path.includes('Cargo.toml') ||
+                    f.path.includes('Gemfile') ||
+                    f.path.includes('go.mod')
                 );
+                const hasGitignore = repoData.tree?.some(f => f.path === '.gitignore');
 
-                if (hasSrcFolder && hasConfigFiles && fileCount > 10) {
+                if (hasSrcFolder && hasTestFolder && hasDocsFolder && hasConfigFiles && fileCount > 20) {
                     scores.structure = 15;
-                    breakdown.structure = { score: 15, reason: "Well-organized project structure" };
+                    breakdown.structure = { score: 15, reason: "Excellent project organization with docs and tests" };
+                } else if (hasSrcFolder && hasConfigFiles && fileCount > 10) {
+                    scores.structure = 12;
+                    breakdown.structure = { score: 12, reason: "Well-organized project structure" };
                 } else if (hasConfigFiles && fileCount > 5) {
-                    scores.structure = 10;
-                    breakdown.structure = { score: 10, reason: "Basic project structure" };
+                    scores.structure = 8;
+                    breakdown.structure = { score: 8, reason: "Basic project structure" };
                 } else {
-                    scores.structure = 5;
-                    breakdown.structure = { score: 5, reason: "Simple structure" };
+                    scores.structure = 4;
+                    breakdown.structure = { score: 4, reason: "Simple structure needs improvement" };
                 }
 
+                // Enhanced Commit Analysis
                 const commits = repoData.commits || [];
-                if (commits.length > 20) {
+                if (commits.length >= 50) {
                     scores.commits = 15;
-                    breakdown.commits = { score: 15, reason: `${commits.length} commits show active development` };
-                } else if (commits.length > 10) {
-                    scores.commits = 10;
-                    breakdown.commits = { score: 10, reason: `${commits.length} commits - moderate activity` };
-                } else if (commits.length > 5) {
-                    scores.commits = 7;
-                    breakdown.commits = { score: 7, reason: `${commits.length} commits - basic history` };
+                    breakdown.commits = { score: 15, reason: `${commits.length}+ commits - Very active development` };
+                } else if (commits.length >= 20) {
+                    scores.commits = 12;
+                    breakdown.commits = { score: 12, reason: `${commits.length} commits - Active development` };
+                } else if (commits.length >= 10) {
+                    scores.commits = 8;
+                    breakdown.commits = { score: 8, reason: `${commits.length} commits - Moderate activity` };
+                } else if (commits.length >= 5) {
+                    scores.commits = 5;
+                    breakdown.commits = { score: 5, reason: `${commits.length} commits - Basic history` };
                 } else {
-                    scores.commits = 3;
-                    breakdown.commits = { score: 3, reason: `Only ${commits.length} commits` };
+                    scores.commits = 2;
+                    breakdown.commits = { score: 2, reason: `Only ${commits.length} commits - Needs more activity` };
                 }
 
-                const meaningfulCommits = commits.filter(c => 
-                    c.message && c.message.length > 10 && !c.message.toLowerCase().includes('update')
-                ).length;
+                // Enhanced Commit Message Quality
+                const meaningfulCommits = commits.filter(c => {
+                    const msg = c.message.toLowerCase();
+                    return c.message.length > 15 && 
+                           !msg.includes('update') && 
+                           !msg.includes('fix') && 
+                           (msg.includes('add') || msg.includes('implement') || msg.includes('feat') || msg.includes('docs'));
+                }).length;
                 const commitQualityRatio = commits.length > 0 ? meaningfulCommits / commits.length : 0;
                 
-                if (commitQualityRatio > 0.7) {
+                if (commitQualityRatio > 0.6) {
                     scores.commitMessages = 10;
                     breakdown.commitMessages = { score: 10, reason: "Excellent commit message quality" };
                 } else if (commitQualityRatio > 0.4) {
-                    scores.commitMessages = 6;
-                    breakdown.commitMessages = { score: 6, reason: "Decent commit messages" };
+                    scores.commitMessages = 7;
+                    breakdown.commitMessages = { score: 7, reason: "Good commit messages" };
+                } else if (commitQualityRatio > 0.2) {
+                    scores.commitMessages = 4;
+                    breakdown.commitMessages = { score: 4, reason: "Decent commit messages" };
                 } else {
-                    scores.commitMessages = 3;
-                    breakdown.commitMessages = { score: 3, reason: "Commit messages need improvement" };
+                    scores.commitMessages = 2;
+                    breakdown.commitMessages = { score: 2, reason: "Commit messages need significant improvement" };
                 }
 
+                // Enhanced Test Coverage
                 if (hasTestFolder) {
                     const testFiles = repoData.tree?.filter(f => 
-                        f.path.includes('test') || f.path.includes('spec') || f.path.includes('.test.') || f.path.includes('.spec.')
+                        f.path.includes('test') || 
+                        f.path.includes('spec') || 
+                        f.path.includes('.test.') || 
+                        f.path.includes('.spec.') ||
+                        f.path.includes('__tests__')
                     ).length || 0;
                     
-                    if (testFiles > 5) {
+                    if (testFiles > 20) {
                         scores.tests = 20;
-                        breakdown.tests = { score: 20, reason: `${testFiles} test files found` };
-                    } else if (testFiles > 0) {
+                        breakdown.tests = { score: 20, reason: `${testFiles} test files - Excellent coverage` };
+                    } else if (testFiles > 10) {
+                        scores.tests = 16;
+                        breakdown.tests = { score: 16, reason: `${testFiles} test files - Great coverage` };
+                    } else if (testFiles > 5) {
                         scores.tests = 12;
-                        breakdown.tests = { score: 12, reason: `${testFiles} test file(s) present` };
+                        breakdown.tests = { score: 12, reason: `${testFiles} test files - Good coverage` };
+                    } else {
+                        scores.tests = 8;
+                        breakdown.tests = { score: 8, reason: `${testFiles} test file(s) - Basic testing` };
                     }
                 } else {
-                    breakdown.tests = { score: 0, reason: "No tests found" };
+                    breakdown.tests = { score: 0, reason: "No tests found - Critical issue!" };
                 }
 
+                // Enhanced CI/CD Detection
                 const hasCICD = repoData.tree?.some(f => 
                     f.path.includes('.github/workflows') || 
                     f.path.includes('.gitlab-ci') ||
                     f.path.includes('Jenkinsfile') ||
-                    f.path.includes('.travis.yml')
+                    f.path.includes('.travis.yml') ||
+                    f.path.includes('circle.yml') ||
+                    f.path.includes('.circleci')
                 );
                 
                 if (hasCICD) {
                     scores.cicd = 10;
-                    breakdown.cicd = { score: 10, reason: "CI/CD pipeline configured" };
+                    breakdown.cicd = { score: 10, reason: "CI/CD pipeline configured - Automated workflows" };
                 } else {
-                    breakdown.cicd = { score: 0, reason: "No CI/CD setup" };
+                    breakdown.cicd = { score: 0, reason: "No CI/CD setup - Missing automation" };
                 }
 
+                // Enhanced Relevance Analysis
                 const description = repoData.description?.toLowerCase() || '';
-                const hasDescription = description.length > 20;
+                const hasDescription = description.length > 30;
                 const stars = repoData.stars || 0;
                 const forks = repoData.forks || 0;
+                const hasLicense = repoData.tree?.some(f => f.path.toLowerCase().includes('license'));
                 
-                if (hasDescription && (stars > 5 || forks > 2)) {
+                if (hasDescription && stars > 10 && forks > 5) {
                     scores.relevance = 15;
-                    breakdown.relevance = { score: 15, reason: "Good project description and community interest" };
-                } else if (hasDescription) {
-                    scores.relevance = 10;
-                    breakdown.relevance = { score: 10, reason: "Clear project purpose" };
-                } else {
-                    scores.relevance = 5;
-                    breakdown.relevance = { score: 5, reason: "Limited description" };
-                }
-
-                const totalScore = Object.values(scores).reduce((a, b) => a + b, 0);
-
-                return { totalScore, breakdown, scores };
-            };
-
-            const generateSummary = (analysis) => {
-                const { breakdown } = analysis;
-                const strengths = [];
-                const weaknesses = [];
-
-                if (breakdown.structure.score >= 10) strengths.push("well-organized structure");
-                if (breakdown.commits.score >= 10) strengths.push("consistent development activity");
-                if (breakdown.tests.score >= 12) strengths.push("good test coverage");
-                if (breakdown.readme.score >= 10) strengths.push("clear documentation");
-
-                if (breakdown.tests.score < 10) weaknesses.push("testing");
-                if (breakdown.readme.score < 10) weaknesses.push("documentation");
-                if (breakdown.cicd.score === 0) weaknesses.push("CI/CD setup");
-                if (breakdown.commitMessages.score < 6) weaknesses.push("commit message quality");
-
-                const strengthText = strengths.length > 0 
-                    ? `Strong ${strengths.join(", ")}` 
-                    : "Basic project setup";
-                
-                const weaknessText = weaknesses.length > 0 
-                    ? `needs improvement in ${weaknesses.join(", ")}` 
-                    : "solid foundation across all areas";
-
-                return `${strengthText}; ${weaknessText}.`;
-            };
-
-            const generateRoadmap = (analysis) => {
-                const { breakdown } = analysis;
-                const roadmap = [];
-
-                if (breakdown.readme.score < 10) {
-                    roadmap.push({
-                        priority: "High",
-                        task: "Enhance README documentation",
-                        details: "Add project overview, installation steps, usage examples, and contribution guidelines"
-                    });
-                }
-
-                if (breakdown.tests.score < 12) {
-                    roadmap.push({
-                        priority: "High",
-                        task: "Implement comprehensive testing",
-                        details: "Add unit tests, integration tests, and aim for >70% code coverage"
-                    });
-                }
-
-                if (breakdown.cicd.score === 0) {
-                    roadmap.push({
-                        priority: "Medium",
-                        task: "Set up CI/CD pipeline",
-                        details: "Configure GitHub Actions for automated testing and deployment"
-                    });
-                }
-
-                if (breakdown.commitMessages.score < 6) {
-                    roadmap.push({
-                        priority: "Medium",
-                        task: "Improve commit message quality",
-                        details: "Use conventional commits format (feat:, fix:, docs:) with clear descriptions"
-                    });
-                }
-
-                if (breakdown.structure.score < 10) {
-                    roadmap.push({
-                        priority: "Medium",
-                        task: "Reorganize project structure",
-                        details: "Separate source code, tests, and configuration into logical directories"
-                    });
-                }
-
-                return roadmap;
-            };
-
-            const getRating = (score) => {
-                if (score >= 80) return { level: "Advanced", badge: "Gold", color: "gold" };
-                if (score >= 60) return { level: "Intermediate", badge: "Silver", color: "silver" };
-                return { level: "Beginner", badge: "Bronze", color: "bronze" };
-            };
-
-            const evaluateRepository = async () => {
-                setLoading(true);
-                setError(null);
-                setResult(null);
-
-                try {
-                    const repoInfo = extractRepoInfo(repoUrl);
-                    if (!repoInfo) {
-                        throw new Error('Invalid GitHub URL format. Use: https://github.com/username/repo');
-                    }
-
-                    const { owner, repo } = repoInfo;
-
-                    const [repoResponse, commitsResponse, contentsResponse, readmeResponse] = await Promise.all([
-                        fetch(`https://api.github.com/repos/${owner}/${repo}`),
-                        fetch(`https://api.github.com/repos/${owner}/${repo}/commits?per_page=100`),
-                        fetch(`https://api.github.com/repos/${owner}/${repo}/git/trees/main?recursive=1`).catch(() => 
-                            fetch(`https://api.github.com/repos/${owner}/${repo}/git/trees/master?recursive=1`)
-                        ),
-                        fetch(`https://api.github.com/repos/${owner}/${repo}/readme`).catch(() => null)
-                    ]);
-
-                    if (!repoResponse.ok) {
-                        throw new Error('Repository not found or not accessible');
-                    }
-
-                    const repoData = await repoResponse.json();
-                    const commits = await commitsResponse.json();
-                    const contents = await contentsResponse.json();
-                    
-                    let readmeContent = null;
-                    if (readmeResponse && readmeResponse.ok) {
-                        const readmeData = await readmeResponse.json();
-                        readmeContent = atob(readmeData.content);
-                    }
-
-                    const repositoryData = {
-                        name: repoData.name,
-                        description: repoData.description,
-                        stars: repoData.stargazers_count,
-                        forks: repoData.forks_count,
-                        language: repoData.language,
-                        commits: commits.map(c => ({
-                            message: c.commit.message,
-                            date: c.commit.author.date
-                        })),
-                        tree: contents.tree,
-                        readme: readmeContent
-                    };
-
-                    const analysis = analyzeRepository(repositoryData);
-                    const summary = generateSummary(analysis);
-                    const roadmap = generateRoadmap(analysis);
-                    const rating = getRating(analysis.totalScore);
-
-                    setResult({
-                        score: analysis.totalScore,
-                        rating,
-                        summary,
-                        roadmap,
-                        breakdown: analysis.breakdown,
-                        repoName: repoData.name,
-                        language: repoData.language
-                    });
-
-                } catch (err) {
-                    setError(err.message);
-                } finally {
-                    setLoading(false);
-                }
-            };
-
-            return (
-                <div className="container">
-                    <div className="header">
-                        <div className="header-icon">
-                            <GithubIcon />
-                            <h1 className="title">GitGrade</h1>
-                        </div>
-                        <p className="subtitle">AI-Powered GitHub Repository Evaluator</p>
-                        <p className="description">Analyze code quality, structure, and get personalized improvement roadmap</p>
-                    </div>
-
-                    <div className="input-card">
-                        <label className="label">GitHub Repository URL</label>
-                        <div className="input-group">
-                            <input
-                                type="text"
-                                value={repoUrl}
-                                onChange={(e) => setRepoUrl(e.target.value)}
-                                placeholder="https://github.com/username/repository"
-                                className="input"
-                                onKeyPress={(e) => e.key === 'Enter' && evaluateRepository()}
-                            />
-                            <button
-                                onClick={evaluateRepository}
-                                disabled={loading || !repoUrl}
-                                className="btn"
-                            >
-                                {loading ? (
-                                    <>
-                                        <LoaderIcon />
-                                        Analyzing...
-                                    </>
-                                ) : (
-                                    'Evaluate'
-                                )}
-                            </button>
-                        </div>
-                    </div>
-
-                    {error && (
-                        <div className="error-card">
-                            <p className="error-title">Error</p>
-                            <p className="error-text">{error}</p>
-                        </div>
-                    )}
-
-                    {result && (
-                        <div>
-                            <div className="score-card">
-                                <div className="score-header">
-                                    <div>
-                                        <h2 className="repo-name">{result.repoName}</h2>
-                                        <p className="repo-lang">{result.language || 'Multiple Languages'}</p>
-                                    </div>
-                                    <AwardIcon />
-                                </div>
-                                
-                                <div className="score-display">
-                                    <div>
-                                        <div className="score-number">{result.score}</div>
-                                        <div className="score-label">out of 100</div>
-                                    </div>
-                                    <div style={{marginBottom: '8px'}}>
-                                        <div className={`rating-badge ${result.rating.color}`}>{result.rating.badge}</div>
-                                        <div className="rating-level">{result.rating.level}</div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div className="card">
-                                <h3 className="card-title">Summary</h3>
-                                <p className="summary-text">{result.summary}</p>
-                            </div>
-
-                            <div className="card">
-                                <h3 className="card-title">Score Breakdown</h3>
-                                <div>
-                                    {Object.entries(result.breakdown).map(([key, value]) => (
-                                        <div key={key} className="breakdown-item">
-                                            <div className="breakdown-info">
-                                                <div className="breakdown-header">
-                                                    <span className="breakdown-name">
-                                                        {key.replace(/([A-Z])/g, ' $1').trim()}
-                                                    </span>
-                                                    <span className="breakdown-score">{value.score}</span>
-                                                </div>
-                                                <p className="breakdown-reason">{value.reason}</p>
-                                            </div>
-                                            <div className="progress-bar-container">
-                                                <div
-                                                    className="progress-bar"
-                                                    style={{ width: `${(value.score / 20) * 100}%` }}
-                                                />
-                                            </div>
-                                        </div>
-                                    ))}
-                                </div>
-                            </div>
-
-                            <div className="card">
-                                <h3 className="card-title">Personalized Roadmap</h3>
-                                {result.roadmap.length > 0 ? (
-                                    <div>
-                                        {result.roadmap.map((item, index) => (
-                                            <div key={index} className="roadmap-item">
-                                                <div className="roadmap-content">
-                                                    <div className={`priority-badge priority-${item.priority.toLowerCase()}`}>
-                                                        {item.priority}
-                                                    </div>
-                                                    <div style={{flex: 1}}>
-                                                        <h4 className="roadmap-task">{item.task}</h4>
-                                                        <p className="roadmap-details">{item.details}</p>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        ))}
-                                    </div>
-                                ) : (
-                                    <p className="summary-text">Excellent work! Your repository is in great shape.</p>
-                                )}
-                            </div>
-                        </div>
-                    )}
-                </div>
-            );
-        };
-
-        ReactDOM.render(<GitGradeEvaluator />, document.getElementById('root'));
-    </script>
-</body>
-</html>
+                    breakdown.
