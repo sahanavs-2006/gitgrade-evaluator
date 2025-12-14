@@ -12,7 +12,7 @@ GitGrade is an intelligent system that evaluates GitHub repositories and convert
 
 ## 🚀 Live Demo
 
-[Deploy the application and add link here]
+[[Deploy the application and add link here]](http://localhost:3000)
 
 ## ✨ Features
 
@@ -115,13 +115,14 @@ Prioritized tasks (High/Medium/Low) with specific, actionable guidance.
 
 **Input:**
 ```
-https://github.com/example/todo-app
+https://github.com/sahanavs-2006/gitgrade-evaluator/
 ```
 
 **Output:**
 <img width="1054" height="806" alt="Screenshot 2025-12-14 153855" src="https://github.com/user-attachments/assets/51f5fbe1-724e-4bda-90b4-a683662ef0ec" />
 <img width="1028" height="756" alt="Screenshot 2025-12-14 153908" src="https://github.com/user-attachments/assets/955bb60b-6c4a-48d3-8227-948d1edf62bb" />
-![Uploading Screenshot 2025-12-14 153920.png…]()
+<img width="1042" height="813" alt="Screenshot 2025-12-14 153920" src="https://github.com/user-attachments/assets/4acad52b-92d1-4e26-bc36-1122d73741ed" />
+
 
 ```
 Score: 78/100 (Silver - Intermediate)
