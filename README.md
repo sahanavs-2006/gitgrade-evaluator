@@ -5,53 +5,81 @@
 
 ## 🎯 Project Overview
 
-GitGrade is an intelligent system that evaluates GitHub repositories and provides:
+GitGrade is an intelligent system that evaluates GitHub repositories and converts them into:
 1. A meaningful **SCORE/RATING** (0-100, Bronze/Silver/Gold)
 2. A concise **WRITTEN SUMMARY** of strengths and weaknesses
 3. A **PERSONALIZED IMPROVEMENT ROADMAP** with actionable steps
 
 ## 🚀 Live Demo
 
-🔗 **Try it here**: [GitGrade Evaluator](https://sahanavs-2006.github.io/gitgrade-evaluator/)
+[Deploy the application and add link here]
 
 ## ✨ Features
 
-### Multi-Dimensional Evaluation (100 Points)
-- **README Quality** (15 points) - Documentation depth
-- **Project Structure** (15 points) - Folder organization
-- **Commit Consistency** (15 points) - Development activity
-- **Commit Messages** (10 points) - Message quality
-- **Test Coverage** (20 points) - Testing implementation
-- **CI/CD Setup** (10 points) - Automation pipelines
-- **Real-world Relevance** (15 points) - Project impact
+### Multi-Dimensional Evaluation
+- **Code Quality & Structure** (15 points)
+- **Documentation Quality** (15 points)
+- **Development Consistency** (15 points)
+- **Commit Message Quality** (10 points)
+- **Test Coverage** (20 points)
+- **CI/CD Implementation** (10 points)
+- **Real-world Relevance** (15 points)
 
 ### Intelligent Analysis
-- Fetches data via GitHub API (no cloning needed)
-- Analyzes file structure, commits, and documentation
+- Fetches repository data via GitHub API (no cloning)
+- Analyzes file structure, commit history, and documentation
+- Detects test files, CI/CD configs, and best practices
 - Provides transparent, explainable scoring
-- Generates AI-powered summaries and roadmaps
 
-### Beautiful Interface
-- Modern gradient design
-- Real-time analysis
-- Visual score breakdowns
-- Priority-based improvement suggestions
+### AI-Generated Outputs
+- Honest, constructive summary (mentor-like tone)
+- Personalized roadmap with priority-based tasks
+- Actionable improvement steps
 
 ## 🛠️ Technology Stack
 
-- **Frontend**: React (vanilla JavaScript)
-- **Styling**: Custom CSS with modern gradients
+- **Frontend**: React with Tailwind CSS
 - **API**: GitHub REST API
-- **Deployment**: GitHub Pages
+- **Deployment**: [Vercel/Netlify/Your choice]
+- **Styling**: Modern gradient UI with dark theme
 
-## 📊 How It Works
+## 📦 Installation & Setup
+
+### Prerequisites
+- Node.js (v14 or higher)
+- npm or yarn
+
+### Local Development
+
+1. Clone the repository:
+```bash
+git clone https://github.com/yourusername/gitgrade-evaluator.git
+cd gitgrade-evaluator
+```
+
+2. Install dependencies:
+```bash
+npm install
+```
+
+3. Start development server:
+```bash
+npm run dev
+```
+
+4. Open browser to `http://localhost:3000`
+
+## 🎯 How It Works
 
 ### 1. Input
-User provides a public GitHub repository URL
+User provides a public GitHub repository URL:
+```
+https://github.com/username/repository-name
+```
 
 ### 2. Data Collection
 System fetches via GitHub API:
-- Repository metadata
+- Repository metadata (stars, forks, description)
 - Commit history (last 100 commits)
 - File structure (recursive tree)
 - README content
@@ -60,88 +88,99 @@ System fetches via GitHub API:
 
 **Transparent Rule-Based System:**
 
-| Criteria | Points | What We Check |
-|----------|--------|---------------|
-| README | 15 | Length and quality |
+| Criteria | Max Points | Evaluation Method |
+|----------|-----------|-------------------|
+| README | 15 | Length and quality check |
 | Structure | 15 | Folder organization, config files |
 | Commits | 15 | Commit count and consistency |
-| Messages | 10 | Meaningful commit messages |
+| Messages | 10 | Meaningful commit message ratio |
 | Tests | 20 | Test file detection |
-| CI/CD | 10 | Pipeline configuration |
+| CI/CD | 10 | Pipeline configuration detection |
 | Relevance | 15 | Description and community metrics |
 
 ### 4. Output Generation
 
 **Score/Rating:**
-- 0-59: Beginner (Bronze 🥉)
-- 60-79: Intermediate (Silver 🥈)
-- 80-100: Advanced (Gold 🥇)
+- 0-59: Beginner (Bronze)
+- 60-79: Intermediate (Silver)
+- 80-100: Advanced (Gold)
 
 **Summary:**
-AI-generated honest feedback highlighting strengths and weaknesses
+Generated based on score breakdown, highlighting top strengths and key weaknesses.
 
 **Roadmap:**
-Priority-based tasks (High/Medium/Low) with specific guidance
+Prioritized tasks (High/Medium/Low) with specific, actionable guidance.
 
-## 💡 Example
+## 📊 Example Output
 
 **Input:**
 ```
-https://github.com/facebook/react
+https://github.com/example/todo-app
 ```
 
 **Output:**
 ```
-Score: 85/100 (Gold - Advanced)
+Score: 78/100 (Silver - Intermediate)
 
 Summary: Strong well-organized structure, consistent development 
-activity, comprehensive testing; needs minor improvements in 
-documentation structure.
+activity; needs improvement in testing, CI/CD setup.
 
 Roadmap:
-- [Low] Add advanced features
-  Consider adding monitoring, logging, or performance optimizations
+• [High] Implement comprehensive testing
+  Add unit tests, integration tests, aim for >70% coverage
+
+• [High] Enhance README documentation
+  Add installation steps, usage examples, contribution guidelines
+
+• [Medium] Set up CI/CD pipeline
+  Configure GitHub Actions for automated testing and deployment
+
+• [Medium] Improve commit message quality
+  Use conventional commits format (feat:, fix:, docs:)
 ```
 
-## 🚀 Usage
-
-1. Open the [GitGrade Evaluator](https://sahanavs-2006.github.io/gitgrade-evaluator/)
-2. Enter any public GitHub repository URL
-3. Click "Evaluate"
-4. View your score, summary, and personalized roadmap
-
-## 🎓 Key Design Decisions
+## 🎨 Key Design Decisions
 
 ### 1. No Repository Cloning
 - Uses GitHub API for all data
-- Faster and more efficient
+- Faster analysis
 - No storage requirements
+- Respects rate limits
 
 ### 2. Transparent Scoring
-- Every point is explained
+- Every point explained
 - Clear breakdown shown to users
-- Rule-based, not black-box AI
+- Rule-based, not black-box
 
 ### 3. Honest Feedback
 - No sugar-coating weaknesses
-- Constructive mentor-like tone
-- Focus on actionable improvements
+- Constructive mentor tone
+- Focuses on improvement
 
-### 4. Beginner-Friendly
-- Single HTML file
-- No build process required
-- Easy to understand and modify
+### 4. Actionable Roadmap
+- Specific, implementable tasks
+- Priority-based organization
+- Detailed guidance for each step
 
-## 📦 Installation (For Local Development)
+## 🚀 Deployment
 
-1. Clone the repository:
+### Option 1: Vercel (Recommended)
 ```bash
-git clone https://github.com/sahanavs-2006/gitgrade-evaluator.git
+npm install -g vercel
+vercel
 ```
 
-2. Open `index.html` in your browser
+### Option 2: Netlify
+```bash
+npm run build
+# Deploy dist folder via Netlify UI
+```
 
-That's it! No dependencies or build process needed.
+### Option 3: GitHub Pages
+```bash
+npm run build
+# Push dist folder to gh-pages branch
+```
 
 ## 🔒 API Rate Limits
 
@@ -149,35 +188,38 @@ GitHub API allows:
 - **Unauthenticated**: 60 requests/hour
 - **Authenticated**: 5,000 requests/hour
 
-For production use with high traffic, consider adding GitHub OAuth.
+For production, consider adding GitHub OAuth token.
 
-## 🎯 Hackathon Requirements Met
+## 🎓 Educational Value
 
-✅ **Score/Rating System** - 0-100 with Bronze/Silver/Gold badges  
-✅ **Written Summary** - AI-generated, honest, mentor-like feedback  
-✅ **Personalized Roadmap** - Priority-based actionable steps  
-✅ **Multi-dimensional Evaluation** - 7 key metrics analyzed  
-✅ **Real Repository Data** - All analysis based on actual GitHub API data  
-✅ **Transparent Scoring** - Every point explained with reasoning  
-✅ **Working System** - Fully functional end-to-end solution  
+This tool helps developers:
+- Understand repository quality metrics
+- Learn best practices in software development
+- Get actionable feedback for improvement
+- Build better portfolios
 
-## 👨‍💻 Author
+## 🤝 Contributing
 
-**Sahanav S**  
-Hackathon: GitGrade by UnsaidTalks  
-Submission: December 2024
+Contributions welcome! Please:
+1. Fork the repository
+2. Create a feature branch
+3. Submit a pull request
 
 ## 📝 License
 
-MIT License - Free to use and modify
+MIT License - feel free to use for your projects!
+
+## 👨‍💻 Author
+
+[Your Name]  
+Hackathon: GitGrade by UnsaidTalks
 
 ## 🙏 Acknowledgments
 
 - GitHub API for repository data
 - UnsaidTalks for organizing the hackathon
-- React community for excellent documentation
+- React and Tailwind CSS communities
 
 ---
 
-**Live Demo**: https://sahanavs-2006.github.io/gitgrade-evaluator/  
-**Repository**: https://github.com/sahanavs-2006/gitgrade-evaluator
+**Submission Link**: https://unstop.com/hackathons/gitgrade-hackathon-unsaidtalks-education-1607938
