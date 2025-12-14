@@ -21,13 +21,6 @@ The goal is to help **students, recruiters, mentors, and hackathon evaluators** 
 
 🔗 **https://sahanavs-2006.github.io/gitgrade-evaluator/**
 
-> The screenshots shown below are taken directly from this live deployed application.
-## 📊 Example Output
-...
-<img ... src="https://github.com/user-attachments/assets/51f5fbe1-724e-4bda-90b4-a683662ef0ec" />
-<img ... src="https://github.com/user-attachments/assets/955bb60b-6c4a-48d3-8227-948d1edf62bb" />
-<img ... src="https://github.com/user-attachments/assets/4acad52b-92d1-4e26-bc36-1122d73741ed" />
-
 https://sahanavs-2006.github.io/gitgrade-evaluator/
 
 ---
