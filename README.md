@@ -222,4 +222,4 @@ Hackathon: GitGrade by UnsaidTalks
 
 ---
 
-**Submission Link**: https://unstop.com/hackathons/gitgrade-hackathon-unsaidtalks-education-1607938
+
