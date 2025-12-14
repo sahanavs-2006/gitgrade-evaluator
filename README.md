@@ -211,7 +211,7 @@ MIT License - feel free to use for your projects!
 
 ## 👨‍💻 Author
 
-[Your Name]  
+Sahana V S
 Hackathon: GitGrade by UnsaidTalks
 
 ## 🙏 Acknowledgments
