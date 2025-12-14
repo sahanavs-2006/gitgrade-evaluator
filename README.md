@@ -119,6 +119,10 @@ https://github.com/example/todo-app
 ```
 
 **Output:**
+<img width="1054" height="806" alt="Screenshot 2025-12-14 153855" src="https://github.com/user-attachments/assets/51f5fbe1-724e-4bda-90b4-a683662ef0ec" />
+<img width="1028" height="756" alt="Screenshot 2025-12-14 153908" src="https://github.com/user-attachments/assets/955bb60b-6c4a-48d3-8227-948d1edf62bb" />
+![Uploading Screenshot 2025-12-14 153920.png…]()
+
 ```
 Score: 78/100 (Silver - Intermediate)
 
